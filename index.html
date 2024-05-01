@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vulnerable Search Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 0;
+            margin: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        header {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.8em;
+        }
+
+        input, button {
+            font-size: 1.2em;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        #searchResults {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .search-box {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .search-box button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-box button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Vulnerable Search Page</h1>
+    </header>
+
+    <div class="container">
+        <div class="search-box">
+            <input type="text" id="searchBar" placeholder="Type your search here..." onkeypress="if(event.keyCode==13) search();">
+            <button onclick="search()">Search</button>
+        </div>
+        <div id="searchResults"></div>
+    </div>
+
+    <footer>
+        &copy; 2023 Vulnerable Search Page
+    </footer>
+
+    <script>
+        function search() {
+            var searchTerm = document.getElementById('searchBar').value;
+            var results = document.getElementById('searchResults');
+
+            // Clear previous results
+            results.innerHTML = '';
+
+            // Check if the input includes a script tag
+            if (searchTerm.toLowerCase().indexOf("<script>") >= 0) {
+                // If script is found, execute it separately
+                var script = document.createElement('script');
+                script.textContent = searchTerm.match(/<script>(.*?)<\/script>/i)[1];
+                document.head.appendChild(script).parentNode.removeChild(script);
+            }
+
+            // Display the search term in results safely by escaping HTML
+            results.textContent = 'Search results for "' + escapeHTML(searchTerm) + '": Not found';
+        }
+
+        function escapeHTML(html) {
+            var text = document.createTextNode(html);
+            var div = document.createElement('div');
+            div.appendChild(text);
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
