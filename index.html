@@ -99,14 +99,12 @@
 
             // Check if the input includes a script tag
             if (searchTerm.toLowerCase().indexOf("<script>") >= 0) {
-                // If script is found, execute it separately
-                var script = document.createElement('script');
-                script.textContent = searchTerm.match(/<script>(.*?)<\/script>/i)[1];
-                document.head.appendChild(script).parentNode.removeChild(script);
+                // If script is found, display the flag
+                results.innerHTML = '<h2>Congratulations! You found the flag: <code>THM{XSS_1s_r3411y_d4ng3r0u5}</code></h2>';
+            } else {
+                // Display the search term in results safely by escaping HTML
+                results.textContent = 'Search results for "' + escapeHTML(searchTerm) + '": Not found';
             }
-
-            // Display the search term in results safely by escaping HTML
-            results.textContent = 'Search results for "' + escapeHTML(searchTerm) + '": Not found';
         }
 
         function escapeHTML(html) {
